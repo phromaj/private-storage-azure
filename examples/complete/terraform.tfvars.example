@@ -1,0 +1,77 @@
+# =============================================================================
+# COMPLETE EXAMPLE CONFIGURATION
+# =============================================================================
+# This file shows how to configure all variables for a complete deployment
+# Copy values from this file to terraform.tfvars and customize as needed
+
+# Basic Configuration
+location     = "West Europe"
+environment  = "poc"
+project_name = "datasafe"
+
+# Networking Configuration
+vnet_address_space = "10.10.0.0/16"
+
+subnet_address_prefixes = {
+  private_endpoints = "10.10.1.0/24"
+  compute          = "10.10.2.0/24"
+}
+
+# Storage Configuration
+storage_account_tier       = "Standard"
+storage_replication_type   = "LRS"
+enable_blob_versioning     = true
+blob_delete_retention_days = 7
+
+# Virtual Machine Configuration
+admin_username = "azureadmin"
+# IMPORTANT: Change this password!
+admin_password = "YourSecurePassword123!"
+vm_size        = "Standard_B2s"
+
+# Security Configuration
+enable_rdp_access         = true
+rdp_source_address_prefix = "*"  # Use specific IP for better security
+allowed_ip_ranges         = []
+
+# Monitoring Configuration
+enable_monitoring           = true
+enable_network_watcher      = true
+log_analytics_workspace_sku = "PerGB2018"
+log_retention_days          = 30
+
+# Feature Flags
+create_test_vm          = true
+create_monitoring       = true
+enable_private_dns_zone = true
+create_bastion          = false
+
+# Advanced Configuration - Additional Private Endpoints
+additional_private_endpoints = {
+  # Uncomment to add table storage private endpoint
+  # "table" = {
+  #   subresource_names = ["table"]
+  #   private_dns_zone  = "privatelink.table.core.windows.net"
+  # }
+  # Uncomment to add queue storage private endpoint
+  # "queue" = {
+  #   subresource_names = ["queue"]
+  #   private_dns_zone  = "privatelink.queue.core.windows.net"
+  # }
+}
+
+# Resource Tagging
+tags = {
+  Project     = "DataSafe"
+  Environment = "POC"
+  ManagedBy   = "Terraform"
+  Example     = "Complete"
+  Owner       = "Cloud Team"
+}
+
+additional_tags = {
+  Purpose    = "Private Storage Demo"
+  CostCenter = "IT-001"
+  Compliance = "Internal"
+  Backup     = "NotRequired"
+}

@@ -1,0 +1,154 @@
+# =============================================================================
+# TERRAFORM VARIABLES EXAMPLE
+# =============================================================================
+# Copy this file to terraform.tfvars and customize the values below
+# Make sure to update sensitive values like passwords
+
+# =============================================================================
+# BASIC CONFIGURATION
+# =============================================================================
+
+# Azure region where all resources will be deployed
+location = "West Europe"
+
+# Environment name (dev, test, prod, poc)
+environment = "poc"
+
+# Project name for resource naming
+project_name = "datasafe"
+
+# =============================================================================
+# VIRTUAL MACHINE CONFIGURATION
+# =============================================================================
+
+# VM administrator credentials
+admin_username = "azureadmin"
+# IMPORTANT: Change this password! It must meet Azure password requirements:
+# - At least 12 characters
+# - Contains uppercase, lowercase, number, and special character
+admin_password = "YourSecurePassword123!"
+
+# VM size (adjust based on your needs)
+vm_size = "Standard_B2s"
+
+# =============================================================================
+# NETWORKING CONFIGURATION
+# =============================================================================
+
+# Virtual network address space
+vnet_address_space = "10.10.0.0/16"
+
+# Subnet address prefixes
+subnet_address_prefixes = {
+  private_endpoints = "10.10.1.0/24"
+  compute          = "10.10.2.0/24"
+}
+
+# =============================================================================
+# STORAGE CONFIGURATION
+# =============================================================================
+
+# Storage account tier (Standard or Premium)
+storage_account_tier = "Standard"
+
+# Storage replication type
+storage_replication_type = "LRS"
+
+# Enable blob versioning
+enable_blob_versioning = true
+
+# Blob retention policy (days)
+blob_delete_retention_days = 7
+
+# =============================================================================
+# SECURITY AND ACCESS CONFIGURATION
+# =============================================================================
+
+# Enable RDP access to the test VM
+enable_rdp_access = true
+
+# Source address prefix for RDP (use specific IP for better security)
+# "*" allows from anywhere (NOT recommended for production)
+# Use your IP address or CIDR block for better security
+rdp_source_address_prefix = "*"
+
+# Allowed IP ranges for additional security (optional)
+# Example: ["203.0.113.0/24", "198.51.100.0/24"]
+allowed_ip_ranges = []
+
+# =============================================================================
+# MONITORING AND DIAGNOSTICS
+# =============================================================================
+
+# Enable monitoring and diagnostics
+enable_monitoring = true
+
+# Enable Network Watcher
+enable_network_watcher = true
+
+# Log Analytics workspace SKU
+log_analytics_workspace_sku = "PerGB2018"
+
+# Log retention in days
+log_retention_days = 30
+
+# =============================================================================
+# FEATURE FLAGS
+# =============================================================================
+
+# Create test virtual machine
+create_test_vm = true
+
+# Create monitoring resources
+create_monitoring = true
+
+# Enable private DNS zone
+enable_private_dns_zone = true
+
+# Create Azure Bastion (more secure than RDP over internet)
+create_bastion = false
+
+# =============================================================================
+# ADVANCED CONFIGURATION
+# =============================================================================
+
+# Custom resource group name (optional - will be auto-generated if not set)
+# resource_group_name = "rg-custom-name"
+
+# Custom storage account name (optional - will be auto-generated if not set)
+# storage_account_name = "stgcustomname001"
+
+# Custom VM name (optional - will be auto-generated if not set)
+# vm_name = "vm-custom-name"
+
+# Additional private endpoints for other storage services
+# additional_private_endpoints = {
+#   "table" = {
+#     subresource_names = ["table"]
+#     private_dns_zone  = "privatelink.table.core.windows.net"
+#   }
+#   "queue" = {
+#     subresource_names = ["queue"]
+#     private_dns_zone  = "privatelink.queue.core.windows.net"
+#   }
+# }
+
+# =============================================================================
+# RESOURCE TAGGING
+# =============================================================================
+
+# Default tags (these will be applied to all resources)
+tags = {
+  Project     = "DataSafe"
+  Environment = "POC"
+  Owner       = "Cloud Team"
+  Purpose     = "Private Storage Testing"
+  CostCenter  = "IT-001"
+}
+
+# Additional tags to merge with default tags
+additional_tags = {
+  # Department = "IT"
+  # Compliance = "SOC2"
+  # Backup     = "Required"
+}
