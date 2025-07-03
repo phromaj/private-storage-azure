@@ -1,3 +1,13 @@
+variable "subscription_id" {
+  description = "The Azure subscription ID to use for deployment"
+  type        = string
+
+  validation {
+    condition     = can(regex("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", var.subscription_id))
+    error_message = "Subscription ID must be a valid UUID."
+  }
+}
+
 variable "location" {
   description = "The Azure region where all resources will be created"
   type        = string
@@ -73,10 +83,12 @@ variable "storage_account_name" {
   default     = null
 
   validation {
-    condition = var.storage_account_name == null || (
-      length(var.storage_account_name) >= 3 &&
-      length(var.storage_account_name) <= 24 &&
-      can(regex("^[a-z0-9]+$", var.storage_account_name))
+    condition = (
+      var.storage_account_name == null ? true : (
+        length(var.storage_account_name) >= 3 &&
+        length(var.storage_account_name) <= 24 &&
+        can(regex("^[a-z0-9]+$", var.storage_account_name))
+      )
     )
     error_message = "Storage account name must be 3-24 characters, alphanumeric, lowercase only."
   }
@@ -192,11 +204,15 @@ variable "admin_password" {
   sensitive   = true
 
   validation {
-    condition = length(var.admin_password) >= 12 && can(regex(
-      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
-      var.admin_password
-    ))
-    error_message = "Password must be at least 12 characters with uppercase, lowercase, number, and special character."
+    condition = (
+      length(var.admin_password) >= 12 &&
+      length(var.admin_password) <= 123 &&
+      can(regex("[a-z]", var.admin_password)) &&
+      can(regex("[A-Z]", var.admin_password)) &&
+      can(regex("[0-9]", var.admin_password)) &&
+      can(regex("[!@#$%^&*()_+=-]", var.admin_password))
+    )
+    error_message = "Password must be 12-123 characters with at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*()_+=-)."
   }
 }
 
