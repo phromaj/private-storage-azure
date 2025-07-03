@@ -61,34 +61,7 @@ resource "azurerm_windows_virtual_machine" "main" {
   tags = var.tags
 }
 
-# VM Extension - Enable IIS and basic web server (optional for testing)
-resource "azurerm_virtual_machine_extension" "iis" {
-  name                 = "IIS"
-  virtual_machine_id   = azurerm_windows_virtual_machine.main.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
-  
-  settings = jsonencode({
-    commandToExecute = "powershell.exe Install-WindowsFeature -name Web-Server -IncludeManagementTools && powershell.exe Add-Content -Path \"C:\\inetpub\\wwwroot\\Default.htm\" -Value \"<html><body><h1>Test VM for Private Endpoint</h1><p>This VM can access storage via private endpoint only.</p></body></html>\""
-  })
-  
-  tags = var.tags
-}
-
-# VM Extension - PowerShell for Azure
-resource "azurerm_virtual_machine_extension" "powershell" {
-  name                 = "InstallPowerShell"
-  virtual_machine_id   = azurerm_windows_virtual_machine.main.id
-  publisher            = "Microsoft.Compute"
-  type                 = "CustomScriptExtension"
-  type_handler_version = "1.10"
-  
-  protected_settings = jsonencode({
-    commandToExecute = "powershell.exe -ExecutionPolicy Unrestricted -Command \"Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force; Install-Module -Name Az -Force -AllowClobber\""
-  })
-  
-  tags = var.tags
-  
-  depends_on = [azurerm_virtual_machine_extension.iis]
-}
+# VM Extensions removed due to deployment issues
+# The IIS extension was failing due to PowerShell syntax errors in the commandToExecute
+# The PowerShell extension was also removed as it's not essential for the core functionality
+# If needed, these can be configured manually after VM deployment

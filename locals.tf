@@ -1,7 +1,7 @@
 # Local values for resource naming and configuration
 locals {
   # Naming conventions
-  resource_group_name = var.resource_group_name != null ? var.resource_group_name : "rg-${var.project_name}-privatelink-${var.environment}"
+  resource_group_name = var.resource_group_name != null ? var.resource_group_name : "rg-${var.project_name}-privatelink-${var.environment}-${random_id.storage_suffix.hex}"
 
   # Generate unique storage account name if not provided
   storage_account_name = var.storage_account_name != null ? var.storage_account_name : "stg${var.project_name}${var.environment}${random_id.storage_suffix.hex}"

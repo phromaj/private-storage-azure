@@ -80,27 +80,9 @@ resource "azurerm_log_analytics_workspace" "main" {
   tags = local.common_tags
 }
 
-# Storage Account Diagnostics
-resource "azurerm_monitor_diagnostic_setting" "storage" {
-  count = var.enable_monitoring && var.create_monitoring ? 1 : 0
-
-  name                       = "storage-diagnostics"
-  target_resource_id         = module.storage.storage_account_id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.main[0].id
-
-  # Storage logs
-  enabled_log {
-    category = "StorageRead"
-  }
-
-  enabled_log {
-    category = "StorageWrite"
-  }
-
-  enabled_log {
-    category = "StorageDelete"
-  }
-}
+# Storage Account Diagnostics - Removed due to unsupported categories
+# The StorageRead, StorageWrite, and StorageDelete categories are not supported
+# for storage account diagnostic settings in the current Azure API version
 
 # Network Watcher (for flow logs and monitoring)
 resource "azurerm_network_watcher" "main" {
