@@ -36,7 +36,7 @@ jobs:
       run: terraform plan -input=false -out=tfplan
       env:
         TF_VAR_subscription_id: 9cd57d91-e05d-4f9f-a49c-2a59561e7a33
-        TF_VAR_admin_password: ${{ secrets.TF_ADMIN_PASSWORD }}
+        TF_VAR_admin_password: ${{ secrets.TF_VAR_ADMIN_PASSWORD }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
