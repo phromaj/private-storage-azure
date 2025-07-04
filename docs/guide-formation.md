@@ -76,7 +76,7 @@ Les principaux avantages sont :
 
 Dans le cadre du projet DataSafe Corp, nous avons déployé l'architecture sécurisée suivante :
 
-*<ins>Note : Insérer ici le schéma réseau produit pour le livrable 2.</ins>*
+![](./projet%20technique.drawio.png)
 
 **[Schéma Réseau]**
 
