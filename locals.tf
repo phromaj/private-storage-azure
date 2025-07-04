@@ -120,23 +120,124 @@ locals {
 
   # Network security rules
   nsg_rules = {
-    compute = var.enable_rdp_access ? [
-      {
-        name                       = "Allow-RDP-Inbound"
-        priority                   = 1000
-        direction                  = "Inbound"
-        access                     = "Allow"
-        protocol                   = "Tcp"
-        source_port_range          = "*"
-        destination_port_range     = "3389"
-        source_address_prefix      = var.rdp_source_address_prefix
-        destination_address_prefix = "*"
-      }
-    ] : []
+    compute = concat(
+      var.enable_rdp_access ? [
+        {
+          name                       = "Allow-RDP-Inbound"
+          priority                   = 1000
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "3389"
+          source_address_prefix      = var.rdp_source_address_prefix
+          destination_address_prefix = "*"
+        }
+      ] : [],
+      [
+        # Allow WinRM HTTP for PowerShell remote execution
+        {
+          name                       = "Allow-WinRM-HTTP-Inbound"
+          priority                   = 1100
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "5985"
+          source_address_prefix      = var.rdp_source_address_prefix
+          destination_address_prefix = "*"
+        },
+        # Allow WinRM HTTPS for PowerShell remote execution
+        {
+          name                       = "Allow-WinRM-HTTPS-Inbound"
+          priority                   = 1110
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "5986"
+          source_address_prefix      = var.rdp_source_address_prefix
+          destination_address_prefix = "*"
+        },
+        # Allow HTTPS from VNet only (for storage access)
+        {
+          name                       = "Allow-HTTPS-VNet-Inbound"
+          priority                   = 1200
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "443"
+          source_address_prefix      = "VirtualNetwork"
+          destination_address_prefix = "*"
+        },
+        # Allow SSH for potential Linux management
+        {
+          name                       = "Allow-SSH-Inbound"
+          priority                   = 1300
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "22"
+          source_address_prefix      = var.rdp_source_address_prefix
+          destination_address_prefix = "*"
+        },
+        # Explicitly deny HTTPS from Internet (priority before default allow)
+        {
+          name                       = "Deny-HTTPS-Internet-Inbound"
+          priority                   = 4000
+          direction                  = "Inbound"
+          access                     = "Deny"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "443"
+          source_address_prefix      = "Internet"
+          destination_address_prefix = "*"
+        },
+        # Explicitly deny HTTP from Internet
+        {
+          name                       = "Deny-HTTP-Internet-Inbound"
+          priority                   = 4010
+          direction                  = "Inbound"
+          access                     = "Deny"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "80"
+          source_address_prefix      = "Internet"
+          destination_address_prefix = "*"
+        },
+        # Allow outbound to Azure services
+        {
+          name                       = "Allow-Azure-Services-Outbound"
+          priority                   = 1000
+          direction                  = "Outbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "443"
+          source_address_prefix      = "*"
+          destination_address_prefix = "AzureCloud"
+        },
+        # Allow internal VNet communication
+        {
+          name                       = "Allow-VNet-Outbound"
+          priority                   = 1100
+          direction                  = "Outbound"
+          access                     = "Allow"
+          protocol                   = "*"
+          source_port_range          = "*"
+          destination_port_range     = "*"
+          source_address_prefix      = "VirtualNetwork"
+          destination_address_prefix = "VirtualNetwork"
+        }
+      ]
+    )
 
     private_endpoints = [
+      # Allow HTTPS from VNet only
       {
-        name                       = "Allow-HTTPS-Inbound"
+        name                       = "Allow-HTTPS-VNet-Inbound"
         priority                   = 1000
         direction                  = "Inbound"
         access                     = "Allow"
@@ -144,6 +245,30 @@ locals {
         source_port_range          = "*"
         destination_port_range     = "443"
         source_address_prefix      = "VirtualNetwork"
+        destination_address_prefix = "*"
+      },
+      # Explicitly deny HTTPS from Internet
+      {
+        name                       = "Deny-HTTPS-Internet-Inbound"
+        priority                   = 4000
+        direction                  = "Inbound"
+        access                     = "Deny"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "443"
+        source_address_prefix      = "Internet"
+        destination_address_prefix = "*"
+      },
+      # Explicitly deny HTTP from Internet
+      {
+        name                       = "Deny-HTTP-Internet-Inbound"
+        priority                   = 4010
+        direction                  = "Inbound"
+        access                     = "Deny"
+        protocol                   = "Tcp"
+        source_port_range          = "*"
+        destination_port_range     = "80"
+        source_address_prefix      = "Internet"
         destination_address_prefix = "*"
       }
     ]

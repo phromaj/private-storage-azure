@@ -116,18 +116,27 @@ output "vm_fqdn" {
 # Monitoring Outputs (if enabled)
 output "log_analytics_workspace_name" {
   description = "Name of the Log Analytics workspace"
-  value       = var.create_monitoring ? azurerm_log_analytics_workspace.main[0].name : null
+  value       = var.create_monitoring ? module.monitoring[0].log_analytics_workspace_name : null
 }
 
 output "log_analytics_workspace_id" {
   description = "ID of the Log Analytics workspace"
-  value       = var.create_monitoring ? azurerm_log_analytics_workspace.main[0].id : null
+  value       = var.create_monitoring ? module.monitoring[0].log_analytics_workspace_id : null
 }
 
-output "log_analytics_workspace_customer_id" {
-  description = "Customer ID of the Log Analytics workspace"
-  value       = var.create_monitoring ? azurerm_log_analytics_workspace.main[0].workspace_id : null
-  sensitive   = true
+output "action_group_id" {
+  description = "ID of the monitoring action group"
+  value       = var.create_monitoring ? module.monitoring[0].action_group_id : null
+}
+
+output "data_collection_endpoint_id" {
+  description = "ID of the data collection endpoint"
+  value       = var.create_monitoring && var.enable_advanced_monitoring ? module.monitoring[0].data_collection_endpoint_id : null
+}
+
+output "data_collection_rule_id" {
+  description = "ID of the data collection rule"
+  value       = var.create_monitoring && var.enable_advanced_monitoring ? module.monitoring[0].data_collection_rule_id : null
 }
 
 # Connection Information

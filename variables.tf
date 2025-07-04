@@ -273,6 +273,70 @@ variable "log_retention_days" {
   }
 }
 
+# Monitoring Configuration
+variable "alert_email_addresses" {
+  description = "List of email addresses to receive monitoring alerts"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for email in var.alert_email_addresses : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All email addresses must be valid."
+  }
+}
+
+variable "alert_webhook_urls" {
+  description = "Map of webhook URLs for monitoring alerts"
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition = alltrue([
+      for url in values(var.alert_webhook_urls) : can(regex("^https?://", url))
+    ])
+    error_message = "All webhook URLs must be valid HTTP/HTTPS URLs."
+  }
+}
+
+variable "storage_diagnostic_category_groups" {
+  description = "List of diagnostic category groups to enable for storage services"
+  type        = list(string)
+  default     = ["allLogs"]
+
+  validation {
+    condition = alltrue([
+      for group in var.storage_diagnostic_category_groups : contains(["allLogs", "audit"], group)
+    ])
+    error_message = "Storage diagnostic category groups must be either 'allLogs' or 'audit'."
+  }
+}
+
+variable "enable_table_diagnostics" {
+  description = "Enable diagnostic settings for table storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_queue_diagnostics" {
+  description = "Enable diagnostic settings for queue storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_file_diagnostics" {
+  description = "Enable diagnostic settings for file storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_advanced_monitoring" {
+  description = "Enable advanced monitoring features like data collection rules"
+  type        = bool
+  default     = false
+}
+
 # Network Security
 variable "allowed_ip_ranges" {
   description = "IP ranges allowed to access the VM via RDP (for testing only)"

@@ -21,8 +21,8 @@ variable "vnet_address_space" {
 variable "subnet_configs" {
   description = "Configuration for subnets"
   type = map(object({
-    name             = string
-    address_prefixes = list(string)
+    name              = string
+    address_prefixes  = list(string)
     service_endpoints = list(string)
   }))
 }
@@ -40,7 +40,7 @@ variable "enable_private_dns_zone" {
 
 variable "nsg_names" {
   description = "Names for network security groups"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "nsg_rules" {
