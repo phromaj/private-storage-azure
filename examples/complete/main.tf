@@ -67,7 +67,6 @@ module "private_storage_infrastructure" {
   log_analytics_workspace_sku       = var.log_analytics_workspace_sku
   log_retention_days                 = var.log_retention_days
   alert_email_addresses              = var.alert_email_addresses
-  alert_webhook_urls                 = var.alert_webhook_urls
   storage_diagnostic_category_groups = var.storage_diagnostic_category_groups
   enable_table_diagnostics           = var.enable_table_diagnostics
   enable_queue_diagnostics           = var.enable_queue_diagnostics
