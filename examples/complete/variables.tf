@@ -2,6 +2,7 @@
 # EXAMPLE VARIABLES
 # =============================================================================
 
+
 variable "location" {
   description = "The Azure region where all resources will be created"
   type        = string
@@ -173,6 +174,11 @@ variable "tags" {
     ManagedBy   = "Terraform"
     Example     = "Complete"
   }
+}
+
+variable "subscription_id" {
+  description = "The Azure subscription ID to use for deployment"
+  type        = string
 }
 
 variable "additional_tags" {
