@@ -31,11 +31,11 @@ variable "subnet_address_prefixes" {
   description = "Address prefixes for subnets"
   type = object({
     private_endpoints = string
-    compute          = string
+    compute           = string
   })
   default = {
     private_endpoints = "10.10.1.0/24"
-    compute          = "10.10.2.0/24"
+    compute           = "10.10.2.0/24"
   }
 }
 

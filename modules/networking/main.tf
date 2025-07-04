@@ -4,18 +4,18 @@ resource "azurerm_virtual_network" "main" {
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = [var.vnet_address_space]
-  
+
   tags = var.tags
 }
 
 # Network Security Groups
 resource "azurerm_network_security_group" "main" {
   for_each = var.nsg_names
-  
+
   name                = each.value
   location            = var.location
   resource_group_name = var.resource_group_name
-  
+
   tags = var.tags
 }
 
@@ -40,7 +40,7 @@ resource "azurerm_network_security_rule" "main" {
       ]
     ]) : rule.key => rule
   }
-  
+
   name                        = each.value.name
   priority                    = each.value.priority
   direction                   = each.value.direction
@@ -57,7 +57,7 @@ resource "azurerm_network_security_rule" "main" {
 # Subnets
 resource "azurerm_subnet" "main" {
   for_each = var.subnet_configs
-  
+
   name                 = each.value.name
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.main.name
@@ -68,7 +68,7 @@ resource "azurerm_subnet" "main" {
 # Associate Network Security Groups with Subnets
 resource "azurerm_subnet_network_security_group_association" "main" {
   for_each = var.subnet_configs
-  
+
   subnet_id                 = azurerm_subnet.main[each.key].id
   network_security_group_id = azurerm_network_security_group.main[each.key].id
 }
@@ -76,22 +76,22 @@ resource "azurerm_subnet_network_security_group_association" "main" {
 # Private DNS Zone
 resource "azurerm_private_dns_zone" "main" {
   count = var.enable_private_dns_zone ? 1 : 0
-  
+
   name                = var.private_dns_zone_name
   resource_group_name = var.resource_group_name
-  
+
   tags = var.tags
 }
 
 # Link Private DNS Zone to Virtual Network
 resource "azurerm_private_dns_zone_virtual_network_link" "main" {
   count = var.enable_private_dns_zone ? 1 : 0
-  
+
   name                  = "vnet-link-${var.vnet_name}"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.main[0].name
   virtual_network_id    = azurerm_virtual_network.main.id
   registration_enabled  = false
-  
+
   tags = var.tags
 }
