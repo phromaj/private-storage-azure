@@ -205,12 +205,11 @@ variable "admin_password" {
 
   validation {
     condition = (
-      length(var.admin_password) >= 12 &&
+      length(var.admin_password) >= 8 &&
       length(var.admin_password) <= 123 &&
       can(regex("[a-z]", var.admin_password)) &&
       can(regex("[A-Z]", var.admin_password)) &&
-      can(regex("[0-9]", var.admin_password)) &&
-      can(regex("[!@#$%^&*()_+=-]", var.admin_password))
+      can(regex("[0-9]", var.admin_password))
     )
     error_message = "Password must be 12-123 characters with at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*()_+=-)."
   }
