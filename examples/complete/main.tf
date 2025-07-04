@@ -33,6 +33,8 @@ provider "azurerm" {
 
 module "private_storage_infrastructure" {
   source = "../../"  # Points to the root module
+
+  subscription_id = var.subscription_id   # <-- AJOUTE CETTE LIGNE
   
   # Basic Configuration
   location     = var.location
