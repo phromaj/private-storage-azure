@@ -2,6 +2,10 @@
 
 ## **Sécurisation des Services PaaS avec Azure Private Link**
 
+**Projet :** DataSafe Corp  
+**Auteur :** NGUYEN Minh Kha  
+**Date :** 03/07/2025
+
 ---
 
 ### **Table des matières**
