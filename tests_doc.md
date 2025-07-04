@@ -7,7 +7,6 @@ Ce dossier contient des tests basiques pour garantir la qualité et la validité
 ## 🔧 Prérequis
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) installé (v1.0 ou plus).
-- (Optionnel) [pre-commit](https://pre-commit.com/) installé (`pip install pre-commit`).
 
 ---
 
