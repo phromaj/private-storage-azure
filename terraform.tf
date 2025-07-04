@@ -31,5 +31,3 @@ provider "azurerm" {
     }
   }
 }
-
-provider "random" {}
