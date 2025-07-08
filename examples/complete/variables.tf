@@ -2,6 +2,7 @@
 # EXAMPLE VARIABLES
 # =============================================================================
 
+
 variable "location" {
   description = "The Azure region where all resources will be created"
   type        = string
@@ -31,11 +32,11 @@ variable "subnet_address_prefixes" {
   description = "Address prefixes for subnets"
   type = object({
     private_endpoints = string
-    compute          = string
+    compute           = string
   })
   default = {
     private_endpoints = "10.10.1.0/24"
-    compute          = "10.10.2.0/24"
+    compute           = "10.10.2.0/24"
   }
 }
 
@@ -128,6 +129,48 @@ variable "log_retention_days" {
   default     = 30
 }
 
+variable "alert_email_addresses" {
+  description = "List of email addresses for monitoring alerts"
+  type        = list(string)
+  default     = []
+}
+
+variable "alert_webhook_urls" {
+  description = "List of webhook URLs for monitoring alerts"
+  type        = list(string)
+  default     = []
+}
+
+variable "storage_diagnostic_category_groups" {
+  description = "Storage diagnostic category groups to enable"
+  type        = list(string)
+  default     = ["audit", "allLogs"]
+}
+
+variable "enable_table_diagnostics" {
+  description = "Enable diagnostics for table storage"
+  type        = bool
+  default     = true
+}
+
+variable "enable_queue_diagnostics" {
+  description = "Enable diagnostics for queue storage"
+  type        = bool
+  default     = true
+}
+
+variable "enable_file_diagnostics" {
+  description = "Enable diagnostics for file storage"
+  type        = bool
+  default     = true
+}
+
+variable "enable_advanced_monitoring" {
+  description = "Enable advanced monitoring features"
+  type        = bool
+  default     = true
+}
+
 # Feature Flags
 variable "create_test_vm" {
   description = "Whether to create a test virtual machine"
@@ -173,6 +216,11 @@ variable "tags" {
     ManagedBy   = "Terraform"
     Example     = "Complete"
   }
+}
+
+variable "subscription_id" {
+  description = "The Azure subscription ID to use for deployment"
+  type        = string
 }
 
 variable "additional_tags" {

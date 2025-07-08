@@ -11,18 +11,18 @@ variable "resource_group_name" {
 variable "storage_config" {
   description = "Storage account configuration"
   type = object({
-    name                              = string
-    account_tier                      = string
-    account_replication_type          = string
-    account_kind                      = string
-    access_tier                       = string
-    allow_nested_items_to_be_public   = bool
-    shared_access_key_enabled         = bool
-    public_network_access_enabled     = bool
-    https_traffic_only_enabled        = bool
-    min_tls_version                   = string
+    name                            = string
+    account_tier                    = string
+    account_replication_type        = string
+    account_kind                    = string
+    access_tier                     = string
+    allow_nested_items_to_be_public = bool
+    shared_access_key_enabled       = bool
+    public_network_access_enabled   = bool
+    https_traffic_only_enabled      = bool
+    min_tls_version                 = string
     blob_properties = object({
-      versioning_enabled       = bool
+      versioning_enabled = bool
       delete_retention_policy = object({
         days = number
       })

@@ -67,30 +67,38 @@ module "compute" {
   depends_on = [module.networking]
 }
 
-# Monitoring Resources (Optional)
-resource "azurerm_log_analytics_workspace" "main" {
+# Monitoring Module
+module "monitoring" {
   count = var.create_monitoring ? 1 : 0
 
-  name                = local.log_analytics_workspace_name
+  source = "./modules/monitoring"
+
   location            = var.location
   resource_group_name = azurerm_resource_group.main.name
-  sku                 = var.log_analytics_workspace_sku
-  retention_in_days   = var.log_retention_days
+  resource_group_id   = azurerm_resource_group.main.id
+  project_name        = var.project_name
+  environment         = var.environment
+
+  storage_account_id                 = module.storage.storage_account_id
+  storage_account_name               = local.storage_account_name
+  storage_account_primary_access_key = module.storage.storage_account_primary_access_key
+
+  log_analytics_workspace_name = local.log_analytics_workspace_name
+  log_analytics_workspace_sku  = var.log_analytics_workspace_sku
+  log_retention_days           = var.log_retention_days
+
+  enable_monitoring                  = var.create_monitoring
+  alert_email_addresses              = var.alert_email_addresses
+  alert_webhook_urls                 = var.alert_webhook_urls
+  storage_diagnostic_category_groups = var.storage_diagnostic_category_groups
+
+  enable_table_diagnostics   = var.enable_table_diagnostics
+  enable_queue_diagnostics   = var.enable_queue_diagnostics
+  enable_file_diagnostics    = var.enable_file_diagnostics
+  enable_advanced_monitoring = var.enable_advanced_monitoring
+  enable_network_watcher     = var.enable_network_watcher
 
   tags = local.common_tags
-}
 
-# Storage Account Diagnostics - Removed due to unsupported categories
-# The StorageRead, StorageWrite, and StorageDelete categories are not supported
-# for storage account diagnostic settings in the current Azure API version
-
-# Network Watcher (for flow logs and monitoring)
-resource "azurerm_network_watcher" "main" {
-  count = var.enable_network_watcher ? 1 : 0
-
-  name                = "nw-${var.project_name}-${var.environment}"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.main.name
-
-  tags = local.common_tags
+  depends_on = [module.storage]
 }

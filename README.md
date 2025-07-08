@@ -346,14 +346,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Terraform Azure Provider documentation
 - Azure Well-Architected Framework
 
-## 📞 Support
+## 🤝 Our Team
 
-For questions and support:
-
-- 📧 Email: [your-team@company.com]
-- 💬 Slack: #cloud-infrastructure
-- 📖 Documentation: [Link to internal docs]
-- 🐛 Issues: [GitHub Issues](link-to-issues)
+- GAUVAIN Lucas
+- SIMOES ROCHA Nuno Ricardo
+- MECHERI Sofian
+- CHIHI Mohammed
+- NGUYEN Minh Kha
 
 ---
 

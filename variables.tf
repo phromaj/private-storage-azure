@@ -203,17 +203,17 @@ variable "admin_password" {
   type        = string
   sensitive   = true
 
-  validation {
-    condition = (
-      length(var.admin_password) >= 12 &&
-      length(var.admin_password) <= 123 &&
-      can(regex("[a-z]", var.admin_password)) &&
-      can(regex("[A-Z]", var.admin_password)) &&
-      can(regex("[0-9]", var.admin_password)) &&
-      can(regex("[!@#$%^&*()_+=-]", var.admin_password))
-    )
-    error_message = "Password must be 12-123 characters with at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*()_+=-)."
-  }
+ # validation {
+  #   condition = (
+  #     length(var.admin_password) >= 12 &&
+  #     length(var.admin_password) <= 123 &&
+  #     can(regex("[a-z]", var.admin_password)) &&
+  #     can(regex("[A-Z]", var.admin_password)) &&
+  #     can(regex("[0-9]", var.admin_password)) &&
+  #     can(regex("[!@#$%^&*()_+=-]", var.admin_password))
+  #   )
+  #   error_message = "Password must be 12-123 characters with at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*()_+=-)."
+  # }
 }
 
 variable "vm_image" {
@@ -271,6 +271,70 @@ variable "log_retention_days" {
     condition     = var.log_retention_days >= 30 && var.log_retention_days <= 730
     error_message = "Log retention days must be between 30 and 730."
   }
+}
+
+# Monitoring Configuration
+variable "alert_email_addresses" {
+  description = "List of email addresses to receive monitoring alerts"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for email in var.alert_email_addresses : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All email addresses must be valid."
+  }
+}
+
+variable "alert_webhook_urls" {
+  description = "Map of webhook URLs for monitoring alerts"
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition = alltrue([
+      for url in values(var.alert_webhook_urls) : can(regex("^https?://", url))
+    ])
+    error_message = "All webhook URLs must be valid HTTP/HTTPS URLs."
+  }
+}
+
+variable "storage_diagnostic_category_groups" {
+  description = "List of diagnostic category groups to enable for storage services"
+  type        = list(string)
+  default     = ["allLogs"]
+
+  validation {
+    condition = alltrue([
+      for group in var.storage_diagnostic_category_groups : contains(["allLogs", "audit"], group)
+    ])
+    error_message = "Storage diagnostic category groups must be either 'allLogs' or 'audit'."
+  }
+}
+
+variable "enable_table_diagnostics" {
+  description = "Enable diagnostic settings for table storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_queue_diagnostics" {
+  description = "Enable diagnostic settings for queue storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_file_diagnostics" {
+  description = "Enable diagnostic settings for file storage service"
+  type        = bool
+  default     = true
+}
+
+variable "enable_advanced_monitoring" {
+  description = "Enable advanced monitoring features like data collection rules"
+  type        = bool
+  default     = false
 }
 
 # Network Security

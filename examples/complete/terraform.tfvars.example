@@ -26,7 +26,7 @@ blob_delete_retention_days = 7
 # Virtual Machine Configuration
 admin_username = "azureadmin"
 # IMPORTANT: Change this password!
-admin_password = "YourSecurePassword123!"
+admin_password = "TestPassword123!@"
 vm_size        = "Standard_B2s"
 
 # Security Configuration

@@ -86,11 +86,23 @@ enable_monitoring = true
 # Enable Network Watcher
 enable_network_watcher = true
 
-# Log Analytics workspace SKU
-log_analytics_workspace_sku = "PerGB2018"
+# Monitoring Configuration
+create_monitoring = true
+enable_table_diagnostics = true
+enable_queue_diagnostics = true
+enable_file_diagnostics = true
+enable_advanced_monitoring = false
 
-# Log retention in days
-log_retention_days = 30
+# Alert Configuration
+alert_email_addresses = ["admin@datasafe.local"]
+alert_webhook_urls = {}
+
+# Storage Diagnostic Categories (all available categories)
+storage_diagnostic_categories = ["StorageRead", "StorageWrite", "StorageDelete"]
+
+# Log Analytics Configuration
+log_analytics_workspace_sku = "PerGB2018"
+log_retention_days = 90
 
 # =============================================================================
 # FEATURE FLAGS
